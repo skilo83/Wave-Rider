@@ -65,7 +65,7 @@ while True:
         try:
             price = float(currentPairPrice) + 1.0 #this is a workaround until i can figure out how to use postOnly option
             orderNumber = conn.sell(pair,price,money)
-            print "----Order number----
+            print "----Order number----"
             print orderNumber["orderNumber"]
             print "--------------------"
         except Exception as e:
