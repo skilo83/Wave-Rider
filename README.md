@@ -11,3 +11,7 @@ First open the script in a text editor and change the variables accordingly.
 Then run it like so.
 
     python2 waverider.py
+
+Donations are appreciated.
+
+BTC: 3HksiJK4HWFNmh3ZKb4HuxSUBApHAFPvMe
