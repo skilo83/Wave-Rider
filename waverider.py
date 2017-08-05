@@ -1,4 +1,4 @@
-# WAVE RIDER V1.0
+# WAVE RIDER V1.1
 # A really sloppy trading bot designed for times of high volatility
 
 
@@ -6,8 +6,6 @@ import time
 import sys
 import datetime
 from poloniex import poloniex
-
-startTime = int(time.time()) - 300 #unused for now
 
 pair = "USDT_BTC" #the pair you are trading
 padding = 5.0 #amount of padding in USDT in between the 24hr high and 24hr low. MUST BE A FLOAT.
@@ -28,7 +26,6 @@ sellProtection = True
 conn = poloniex('API-KEY-GOES-HERE','API-SECRET-GOES-HERE')
 
 # DO NOT TOUCH ANYTHING BELOW THIS LINE!
-orderInfo = None #DO NOT TOUCH
 price = 0.0 #DO NOT TOUCH
 lastTradeTime = 0 #DO NOT TOUCH
 averages = [] #DO NOT TOUCH
@@ -139,5 +136,4 @@ while True:
         print "Weighted average reset due to too many http errors."
     if (len(averages) > 0):
         wAverage = sum(averages) / len(averages)
-    startTime = int(time.time())
     time.sleep(int(period))
