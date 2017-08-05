@@ -32,6 +32,7 @@ averages = [] #DO NOT TOUCH
 wAverage = 0.0 # DO NOT TOUCH
 errcnt = 0 #DO NOT TOUCH
 period = 300 #DO NOT TOUCH. The time in seconds the bot will requst info from the ticker.
+lastTradeTime = int(time.time()) - 50
 
 if (lastBuyPrice > 0.0):
     lastOrder = 0
