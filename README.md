@@ -1,4 +1,4 @@
-# Wave-Rider
+# Wave Rider
 A crypto currency trading bot for poloniex designed for times of high volatility.
 
 ## Use at your own risk!
