@@ -12,6 +12,10 @@ Usage:
 
     python2 waverider.py <lastsellprice> <lastbuyprice> <money> <diff> <padding> <pair>
     
+Help:
+
+    python2 waverider.py -h
+    
 "What in tarnation does all this mean?"
 
 Last sell price:
