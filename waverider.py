@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser(description='These arguments must entered by th
 parser.add_argument('lastSellPrice', type=float, help='The last price you SOLD at before starting the bot or 0.0 if last order was a buy order.')
 parser.add_argument('lastBuyPrice', type=float, help='The last price you BOUGHT at before starting the bot or 0.0 if the last order was a sell order.')
 parser.add_argument('money', type=float, help='The amount of money you want to trade with')
-parser.add_argument('diff', type-float, help='The amount you want to wait for the market to change in between trades.')
+parser.add_argument('diff', type=float, help='The amount you want to wait for the market to change in between trades.')
 parser.add_argument('padding', type=float, help='The amount of padding between 24hrH and 24hrL. 5.0 - 10.0 recomended')
 parser.add_argument('pair', type=str, help='The pair you are trading. USDT_BTC BTC_XMR etc.')
 args = parser.parse_args()
