@@ -1,22 +1,28 @@
-# WAVE RIDER V1.1
+# WAVE RIDER V1.2
 # A really sloppy trading bot designed for times of high volatility
 
 
 import time
 import sys
 import datetime
+import argparse
 from poloniex import poloniex
 
-pair = "USDT_BTC" #the pair you are trading
-padding = 5.0 #amount of padding in USDT in between the 24hr high and 24hr low. MUST BE A FLOAT.
+parser = argparse.ArgumentParser(description='These arguments must entered by the user in this exact order.')
+parser.add_argument('lastSellPrice', type=float, help='The last price you SOLD at before starting the bot or 0.0 if last order was a buy order.')
+parser.add_argument('lastBuyPrice', type=float, help='The last price you BOUGHT at before starting the bot or 0.0 if the last order was a sell order.')
+parser.add_argument('money', type=float, help='The amount of money you want to trade with')
+parser.add_argument('diff', type-float, help='The amount you want to wait for the market to change in between trades.')
+parser.add_argument('padding', type=float, help='The amount of padding between 24hrH and 24hrL. 5.0 - 10.0 recomended')
+parser.add_argument('pair', type=str, help='The pair you are trading. USDT_BTC BTC_XMR etc.')
+args = parser.parse_args()
 
-#---------------Set these to the value of your last trade you made before you starting the bot. MUST BE A FLOAT.
-lastBuyPrice = 0000.000000000 #set this to 0.0 if the last trade you made before starting the bot was a sell order
-lastSellPrice = 2779.78100000 #set this to 0.0 if the last trade you made before starting the bot was a buy order
-#---------------------------------------------------------------------------------------------------------------
-
-money = .007 #the amount of money you are gambling with. MUST BE A FLOAT.
-diff = 30.0 #The price change amount you want to wait for in between trades. MUST BE A FLOAT.
+pair = args.pair
+padding = args.padding
+lastBuyPrice = args.lastBuyPrice
+lastSellPrice = args.lastSellPrice
+money = args.money
+diff = args.diff
 
 #These basically just buy or sell if 1 hour has elapsed since the last trade. Yes i know it's hacky.
 #The whole idea here is to keep the bot trading at all times.
