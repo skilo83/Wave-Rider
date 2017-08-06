@@ -33,7 +33,6 @@ conn = poloniex('API-KEY-GOES-HERE','API-SECRET-GOES-HERE')
 
 # DO NOT TOUCH ANYTHING BELOW THIS LINE!
 price = 0.0 #DO NOT TOUCH
-lastTradeTime = 0 #DO NOT TOUCH
 averages = [] #DO NOT TOUCH
 wAverage = 0.0 # DO NOT TOUCH
 errcnt = 0 #DO NOT TOUCH
@@ -65,7 +64,7 @@ while True:
         print "{:%Y-%m-%d %H:%M:%S}".format(datetime.datetime.now()) + " Average: %f Ask: %f Bid: %f Last: %f" % (wAverage,float(low),float(high),float(currentPairPrice))
     buyDiff = abs(lastBuyPrice - float(currentPairPrice))
     sellDiff = abs(lastSellPrice - float(currentPairPrice))
-    if (lastBuyPrice < wAverage and lastBuyPrice < float(currentPairPrice) and buyDiff >= diff and lastOrder != 1 and float(currentPairPrice) > float(hrLow) + padding):
+    if (len(averages) > 2 and lastBuyPrice < wAverage and lastBuyPrice < float(currentPairPrice) and buyDiff >= diff and lastOrder != 1 and float(currentPairPrice) > float(hrLow) + padding):
         try:
             price = float(currentPairPrice) + 1.0 #this is a workaround until i can figure out how to use postOnly option
             orderNumber = conn.sell(pair,price,money)
@@ -77,11 +76,11 @@ while True:
                 print e
                 print 'Trade error. Trade aborted. Shutting down.'
                 sys.exit(1)
-        print 'SELL ORDER @ $%f' % price
+        print 'SELL ORDER @ %f' % price
         lastSellPrice = float(currentPairPrice)
         lastOrder = 1
         lastTradeTime = int(time.time())
-    if (lastSellPrice > wAverage and lastSellPrice > float(currentPairPrice) and sellDiff >= diff and lastOrder != 0 and float(currentPairPrice) < float(hrHigh) - padding):
+    if (len(averages) > 2 and lastSellPrice > wAverage and lastSellPrice > float(currentPairPrice) and sellDiff >= diff and lastOrder != 0 and float(currentPairPrice) < float(hrHigh) - padding):
         try:
             price = float(currentPairPrice) - 1.0
             orderNumber = conn.buy(pair,price,money)
@@ -93,11 +92,11 @@ while True:
                 print e
                 print 'Trade error. Trade aborted. Shutting down.'
                 sys.exit(1)
-        print 'BUY ORDER @ $%f' % price
+        print 'BUY ORDER @ %f' % price
         lastBuyPrice = float(currentPairPrice)
         lastOrder = 0
         lastTradeTime = int(time.time())
-    if (abs(lastTradeTime - endTime) > 3600 and lastOrder != 0 and float(currentPairPrice) < float(hrHigh) and lastSellPrice > float(currentPairPrice) and buyProtection is True):
+    if (len(averages) > 2 and abs(lastTradeTime - endTime) > 3600 and lastOrder != 0 and float(currentPairPrice) < float(hrHigh) and lastSellPrice > float(currentPairPrice) and buyProtection is True):
         try:
             print 'It has been more than 1 hour since the last trade.'
             print 'Placing a buy order to secure a new position'
@@ -111,11 +110,11 @@ while True:
                 print e
                 print 'Trade error. Trade aborted. Shutting down.'
                 sys.exit(1)
-        print 'BUY ORDER @ $%f' % price
+        print 'BUY ORDER @ %f' % price
         lastBuyPrice = float(currentPairPrice)
         lastOrder = 0
         lastTradeTime = int(time.time())
-    if (abs(lastTradeTime - endTime) > 3600 and lastOrder != 1 and float(currentPairPrice) > float(hrLow) and lastBuyPrice < float(currentPairPrice) and sellProtection is True):
+    if (len(averages) > 2 and abs(lastTradeTime - endTime) > 3600 and lastOrder != 1 and float(currentPairPrice) > float(hrLow) and lastBuyPrice < float(currentPairPrice) and sellProtection is True):
         try:
             print 'It has been more than 1 hour since the last trade.'
             print 'Placing sell order to secure a new position'
@@ -129,7 +128,7 @@ while True:
                 print e
                 print 'Trade error. Trade aborted. Shutting down.'
                 sys.exit(1)
-        print 'SELL ORDER @ $%f' % price
+        print 'SELL ORDER @ %f' % price
         lastSellPrice = float(currentPairPrice)
         lastOrder = 1
         lastTradeTime = int(time.time())
@@ -137,7 +136,7 @@ while True:
         averages.append(float(currentPairPrice))
     if (len(averages) > 4):
         del averages[0]
-    if (errcnt > 1):
+    if (errcnt > 0):
         averages = []
         errcnt = 0
         print "Weighted average reset due to too many http errors."
