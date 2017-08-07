@@ -1,4 +1,4 @@
-# WAVE RIDER V1.4
+# WAVE RIDER V1.5
 # A really sloppy trading bot designed for times of high volatility
 
 
@@ -73,9 +73,8 @@ while True:
             price = float(currentPairPrice) + 1.0 #this is a workaround until i can figure out how to use postOnly option
             orderData = conn.sell(pair,price,money)
         except Exception as e:
-            if (e is 'error' or "'error'"):
-                print e
-                tradeErr = True
+            print e
+            tradeErr = True
         if (tradeErr is False):
             print 'SELL ORDER @ %f' % price
             lastSellPrice = float(currentPairPrice)
@@ -86,9 +85,8 @@ while True:
             price = float(currentPairPrice) - 1.0
             orderData = conn.buy(pair,price,money)
         except Exception as e:
-            if (e is 'error' or "'error'"):
-                print e
-                tradeErr = True
+            print e
+            tradeErr = True
         if (tradeErr is False):
             print 'BUY ORDER @ %f' % price
             lastBuyPrice = float(currentPairPrice)
@@ -101,9 +99,8 @@ while True:
             price = float(currentPairPrice) - 1.0
             orderData = conn.buy(pair,price,money)
         except Exception as e:
-            if (e is 'error' or "'error'"):
-                print e
-                tradeErr = True
+            print e
+            tradeErr = True
         if (tradeErr is False):
             print 'BUY ORDER @ %f' % price
             lastBuyPrice = float(currentPairPrice)
@@ -116,9 +113,8 @@ while True:
             price = float(currentPairPrice) + 1.0
             orderData = conn.sell(pair,price,money)
         except Exception as e:
-            if (e is 'error' or "'error'"):
-                print e
-                tradeErr = True
+            print e
+            tradeErr = True
         if (tradeErr is False):
             print 'SELL ORDER @ %f' % price
             lastSellPrice = float(currentPairPrice)
