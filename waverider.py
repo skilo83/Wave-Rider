@@ -75,6 +75,7 @@ while True:
         except Exception as e:
             if (e is 'error' or "'error'"):
                 print e
+                print "Trade aborted"
                 tradeErr = True
             else:
                 print e
@@ -91,6 +92,7 @@ while True:
         except Exception as e:
             if (e is 'error' or "'error'"):
                 print e
+                print "Trade aborted"
                 tradeErr = True
             else:
                 print e
@@ -109,6 +111,7 @@ while True:
         except Exception as e:
             if (e is 'error' or "'error'"):
                 print e
+                print "Trade aborted"
                 tradeErr = True
             else:
                 print e
@@ -127,6 +130,7 @@ while True:
         except Exception as e:
             if (e is 'error' or "'error'"):
                 print e
+                print "Trade aborted"
                 tradeErr = True
             else:
                 print e
