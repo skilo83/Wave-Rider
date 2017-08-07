@@ -73,8 +73,12 @@ while True:
             price = float(currentPairPrice) + 1.0 #this is a workaround until i can figure out how to use postOnly option
             orderData = conn.sell(pair,price,money)
         except Exception as e:
-            print e
-            tradeErr = True
+            if (e is 'error' or "'error'"):
+                print e
+                tradeErr = True
+            else:
+                print e
+                sys.exit(1)
         if (tradeErr is False):
             print 'SELL ORDER @ %f' % price
             lastSellPrice = float(currentPairPrice)
@@ -85,8 +89,12 @@ while True:
             price = float(currentPairPrice) - 1.0
             orderData = conn.buy(pair,price,money)
         except Exception as e:
-            print e
-            tradeErr = True
+            if (e is 'error' or "'error'"):
+                print e
+                tradeErr = True
+            else:
+                print e
+                sys.exit(1)
         if (tradeErr is False):
             print 'BUY ORDER @ %f' % price
             lastBuyPrice = float(currentPairPrice)
@@ -99,8 +107,12 @@ while True:
             price = float(currentPairPrice) - 1.0
             orderData = conn.buy(pair,price,money)
         except Exception as e:
-            print e
-            tradeErr = True
+            if (e is 'error' or "'error'"):
+                print e
+                tradeErr = True
+            else:
+                print e
+                sys.exit(1)
         if (tradeErr is False):
             print 'BUY ORDER @ %f' % price
             lastBuyPrice = float(currentPairPrice)
@@ -113,8 +125,12 @@ while True:
             price = float(currentPairPrice) + 1.0
             orderData = conn.sell(pair,price,money)
         except Exception as e:
-            print e
-            tradeErr = True
+            if (e is 'error' or "'error'"):
+                print e
+                tradeErr = True
+            else:
+                print e
+                sys.exit(1)
         if (tradeErr is False):
             print 'SELL ORDER @ %f' % price
             lastSellPrice = float(currentPairPrice)
