@@ -1,4 +1,4 @@
-# WAVE RIDER V1.2
+# WAVE RIDER V1.4
 # A really sloppy trading bot designed for times of high volatility
 
 
@@ -24,19 +24,22 @@ lastSellPrice = args.lastSellPrice
 money = args.money
 diff = args.diff
 
+# THIS IS WHERE YOU ADD YOUR API KEY AND API SECRET FROM POLONIEX.
+APIKEY = ""
+APISECRET = ""
+
 #These basically just buy or sell if 1 hour has elapsed since the last trade. Yes i know it's hacky.
 #The whole idea here is to keep the bot trading at all times.
 buyProtection = True
 sellProtection = True
 
-conn = poloniex('API-KEY-GOES-HERE','API-SECRET-GOES-HERE')
-
 # DO NOT TOUCH ANYTHING BELOW THIS LINE!
-price = 0.0 #DO NOT TOUCH
-averages = [] #DO NOT TOUCH
-wAverage = 0.0 # DO NOT TOUCH
-errcnt = 0 #DO NOT TOUCH
-period = 300 #DO NOT TOUCH. The time in seconds the bot will requst info from the ticker.
+conn = poloniex(APIKEY, APISECRET)
+price = 0.0
+averages = []
+wAverage = 0.0
+errcnt = 0
+period = 300
 lastTradeTime = int(time.time()) - 50
 
 if (lastBuyPrice > 0.0):
@@ -46,6 +49,7 @@ else:
 
 while True:
     httpErr = False
+    tradeErr = False
     endTime = int(time.time())
     try:
         currentValues = conn.api_query("returnTicker")
@@ -67,71 +71,59 @@ while True:
     if (len(averages) > 2 and lastBuyPrice < wAverage and lastBuyPrice < float(currentPairPrice) and buyDiff >= diff and lastOrder != 1 and float(currentPairPrice) > float(hrLow) + padding):
         try:
             price = float(currentPairPrice) + 1.0 #this is a workaround until i can figure out how to use postOnly option
-            orderNumber = conn.sell(pair,price,money)
-            print "----Order number----"
-            print orderNumber["orderNumber"]
-            print "--------------------"
+            orderData = conn.sell(pair,price,money)
         except Exception as e:
             if (e is 'error' or "'error'"):
                 print e
-                print 'Trade error. Trade aborted. Shutting down.'
-                sys.exit(1)
-        print 'SELL ORDER @ %f' % price
-        lastSellPrice = float(currentPairPrice)
-        lastOrder = 1
-        lastTradeTime = int(time.time())
+                tradeErr = True
+        if (tradeErr is False):
+            print 'SELL ORDER @ %f' % price
+            lastSellPrice = float(currentPairPrice)
+            lastOrder = 1
+            lastTradeTime = int(time.time())
     if (len(averages) > 2 and lastSellPrice > wAverage and lastSellPrice > float(currentPairPrice) and sellDiff >= diff and lastOrder != 0 and float(currentPairPrice) < float(hrHigh) - padding):
         try:
             price = float(currentPairPrice) - 1.0
-            orderNumber = conn.buy(pair,price,money)
-            print "----Order number----"
-            print orderNumber["orderNumber"]
-            print "--------------------"
+            orderData = conn.buy(pair,price,money)
         except Exception as e:
             if (e is 'error' or "'error'"):
                 print e
-                print 'Trade error. Trade aborted. Shutting down.'
-                sys.exit(1)
-        print 'BUY ORDER @ %f' % price
-        lastBuyPrice = float(currentPairPrice)
-        lastOrder = 0
-        lastTradeTime = int(time.time())
+                tradeErr = True
+        if (tradeErr is False):
+            print 'BUY ORDER @ %f' % price
+            lastBuyPrice = float(currentPairPrice)
+            lastOrder = 0
+            lastTradeTime = int(time.time())
     if (len(averages) > 2 and abs(lastTradeTime - endTime) > 3600 and lastOrder != 0 and float(currentPairPrice) < float(hrHigh) and lastSellPrice > float(currentPairPrice) and buyProtection is True):
         try:
             print 'It has been more than 1 hour since the last trade.'
             print 'Placing a buy order to secure a new position'
             price = float(currentPairPrice) - 1.0
-            orderNumber = conn.buy(pair,price,money)
-            print "----Order number----"
-            print orderNumber["orderNumber"]
-            print "--------------------"
+            orderData = conn.buy(pair,price,money)
         except Exception as e:
             if (e is 'error' or "'error'"):
                 print e
-                print 'Trade error. Trade aborted. Shutting down.'
-                sys.exit(1)
-        print 'BUY ORDER @ %f' % price
-        lastBuyPrice = float(currentPairPrice)
-        lastOrder = 0
-        lastTradeTime = int(time.time())
+                tradeErr = True
+        if (tradeErr is False):
+            print 'BUY ORDER @ %f' % price
+            lastBuyPrice = float(currentPairPrice)
+            lastOrder = 0
+            lastTradeTime = int(time.time())
     if (len(averages) > 2 and abs(lastTradeTime - endTime) > 3600 and lastOrder != 1 and float(currentPairPrice) > float(hrLow) and lastBuyPrice < float(currentPairPrice) and sellProtection is True):
         try:
             print 'It has been more than 1 hour since the last trade.'
             print 'Placing sell order to secure a new position'
             price = float(currentPairPrice) + 1.0
-            orderNumber = conn.sell(pair,price,money)
-            print "----Order number----"
-            print orderNumber["orderNumber"]
-            print "--------------------"
+            orderData = conn.sell(pair,price,money)
         except Exception as e:
             if (e is 'error' or "'error'"):
                 print e
-                print 'Trade error. Trade aborted. Shutting down.'
-                sys.exit(1)
-        print 'SELL ORDER @ %f' % price
-        lastSellPrice = float(currentPairPrice)
-        lastOrder = 1
-        lastTradeTime = int(time.time())
+                tradeErr = True
+        if (tradeErr is False):
+            print 'SELL ORDER @ %f' % price
+            lastSellPrice = float(currentPairPrice)
+            lastOrder = 1
+            lastTradeTime = int(time.time())
     if (httpErr is False):
         averages.append(float(currentPairPrice))
     if (len(averages) > 4):
@@ -139,7 +131,7 @@ while True:
     if (errcnt > 0):
         averages = []
         errcnt = 0
-        print "Weighted average reset due to too many http errors."
+        print "Weighted average reset due to http errors."
     if (len(averages) > 0):
         wAverage = sum(averages) / len(averages)
     time.sleep(int(period))
