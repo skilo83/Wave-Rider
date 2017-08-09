@@ -6,7 +6,9 @@ I am not responsible for any losses you may incur from the use of this script.
 
 Requires python 2.x
 
-First open the script in a text editor and add your api key and api secret from poloniex.
+Setup:
+
+    copy and paste your api keys from poloniex into the included text files.
 
 Usage:
 
@@ -44,4 +46,5 @@ pair:
 
 Donations are appreciated.
 
-BTC: 3HksiJK4HWFNmh3ZKb4HuxSUBApHAFPvMe
+Bitcoin: 3HksiJK4HWFNmh3ZKb4HuxSUBApHAFPvMe
+Bitcoin Cash: 35YJ2UMNzYykMECHMYQ3ss4KNdfBfYcjKi

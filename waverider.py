@@ -1,5 +1,5 @@
-# WAVE RIDER V1.5
-# A really sloppy trading bot designed for times of high volatility
+# WAVE RIDER V1.6
+# An experimental trading bot designed for times of high volatility
 
 
 import time
@@ -24,9 +24,21 @@ lastSellPrice = args.lastSellPrice
 money = args.money
 diff = args.diff
 
-# THIS IS WHERE YOU ADD YOUR API KEY AND API SECRET FROM POLONIEX.
-APIKEY = ""
-APISECRET = ""
+try:
+    file = open("API_KEY.txt","r")
+    APIKEY = file.read()
+    file.close()
+    file = open("API_SECRET.txt","r")
+    APISECRET = file.read()
+    file.close()
+    APIKEY = APIKEY.strip()
+    APISECRET = APISECRET.strip()
+    if (APIKEY is "" or APISECRET is ""):
+        print 'No API key was found.'
+        sys.exit(1)
+except Exception as e:
+    print e
+    sys.exit(1)
 
 #These basically just buy or sell if 1 hour has elapsed since the last trade. Yes i know it's hacky.
 #The whole idea here is to keep the bot trading at all times.
