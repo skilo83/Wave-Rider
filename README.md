@@ -47,4 +47,5 @@ pair:
 Donations are appreciated.
 
 Bitcoin: 3HksiJK4HWFNmh3ZKb4HuxSUBApHAFPvMe
+
 Bitcoin Cash: 35YJ2UMNzYykMECHMYQ3ss4KNdfBfYcjKi

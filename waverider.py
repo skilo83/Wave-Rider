@@ -1,4 +1,4 @@
-# WAVE RIDER V1.6
+# WAVE RIDER V1.7
 # An experimental trading bot designed for times of high volatility
 
 
@@ -49,6 +49,8 @@ sellProtection = True
 conn = poloniex(APIKEY, APISECRET)
 price = 0.0
 averages = []
+tradeMem = [0.0,0.0]
+lastTradeVal = 0.0
 wAverage = 0.0
 errcnt = 0
 period = 300
@@ -93,8 +95,13 @@ while True:
                 print e
                 sys.exit(1)
         if (tradeErr is False):
-            print 'SELL ORDER @ %f' % price
-            lastSellPrice = float(currentPairPrice)
+            profLoss = abs(tradeMem[0] - tradeMem[1])
+            print '-----SELL ORDER-----'
+            #if statement for profit/loss not needed here because this function only executes if profit can be made
+            print 'Sold %f at %f making a total profit of %f' % (money,price,profLoss)
+            lastSellPrice = price
+            lastTradeVal = money * price
+            tradeMem.append(lastTradeVal)
             lastOrder = 1
             lastTradeTime = int(time.time())
     if (len(averages) > 2 and lastSellPrice > wAverage and lastSellPrice > float(currentPairPrice) and sellDiff >= diff and lastOrder != 0 and float(currentPairPrice) < float(hrHigh) - padding):
@@ -110,8 +117,13 @@ while True:
                 print e
                 sys.exit(1)
         if (tradeErr is False):
-            print 'BUY ORDER @ %f' % price
-            lastBuyPrice = float(currentPairPrice)
+            profLoss = abs(tradeMem[0] - tradeMem[1])
+            print '-----BUY ORDER-----'
+            #if statement for profit/loss not needed here because this function only executes if profit can be made
+            print 'Bought %f at %f making a total profit of %f' % (money,price,profLoss)
+            lastBuyPrice = price
+            lastTradeVal = money * price
+            tradeMem.append(lastTradeVal)
             lastOrder = 0
             lastTradeTime = int(time.time())
     if (len(averages) > 2 and abs(lastTradeTime - endTime) > 3600 and lastOrder != 0 and float(currentPairPrice) < float(hrHigh) and lastSellPrice > float(currentPairPrice) and buyProtection is True):
@@ -129,8 +141,15 @@ while True:
                 print e
                 sys.exit(1)
         if (tradeErr is False):
-            print 'BUY ORDER @ %f' % price
-            lastBuyPrice = float(currentPairPrice)
+            profLoss = abs(tradeMem[0] - tradeMem[1])
+            print '-----BUY ORDER-----'
+            if (lastSellPrice < price):
+                print 'Bought %f at %f taking a total loss of %f' % (money,price,profLoss)
+            else:
+                print 'Bought %f at %f making a total profit of %f' % (money,price,profLoss)
+            lastBuyPrice = price
+            lastTradeVal = money * price
+            tradeMem.append(lastTradeVal)
             lastOrder = 0
             lastTradeTime = int(time.time())
     if (len(averages) > 2 and abs(lastTradeTime - endTime) > 3600 and lastOrder != 1 and float(currentPairPrice) > float(hrLow) and lastBuyPrice < float(currentPairPrice) and sellProtection is True):
@@ -148,10 +167,19 @@ while True:
                 print e
                 sys.exit(1)
         if (tradeErr is False):
-            print 'SELL ORDER @ %f' % price
-            lastSellPrice = float(currentPairPrice)
+            profLoss = abs(tradeMem[0] - tradeMem[1])
+            print '-----SELL ORDER-----'
+            if (lastBuyPrice > price):
+                print 'Sold %f at %f taking a total loss of %f' % (money,price,profLoss)
+            else:
+                print 'Sold %f at %f making a total profit of %f' % (money,price,profLoss)
+            lastSellPrice = price
+            lastTradeVal = money * price
+            tradeMem.append(lastTradeVal)
             lastOrder = 1
             lastTradeTime = int(time.time())
+    if (len(tradeMem) > 2):
+        del tradeMem[0]
     if (httpErr is False):
         averages.append(float(currentPairPrice))
     if (len(averages) > 4):
