@@ -117,10 +117,8 @@ while True:
                 print e
                 sys.exit(1)
         if (tradeErr is False):
-            profLoss = abs(tradeMem[0] - tradeMem[1])
             print '-----BUY ORDER-----'
-            #if statement for profit/loss not needed here because this function only executes if profit can be made
-            print 'Bought %f at %f making a total profit of %f' % (money,price,profLoss)
+            print 'Bought %f at %f' % (money,price)
             lastBuyPrice = price
             lastTradeVal = money * price
             tradeMem.append(lastTradeVal)
@@ -141,12 +139,8 @@ while True:
                 print e
                 sys.exit(1)
         if (tradeErr is False):
-            profLoss = abs(tradeMem[0] - tradeMem[1])
             print '-----BUY ORDER-----'
-            if (lastSellPrice < price):
-                print 'Bought %f at %f taking a total loss of %f' % (money,price,profLoss)
-            else:
-                print 'Bought %f at %f making a total profit of %f' % (money,price,profLoss)
+            print 'Bought %f at %f' % (money,price)
             lastBuyPrice = price
             lastTradeVal = money * price
             tradeMem.append(lastTradeVal)
