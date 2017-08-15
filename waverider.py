@@ -82,7 +82,7 @@ while True:
         print "{:%Y-%m-%d %H:%M:%S}".format(datetime.datetime.now()) + " Average: %f Ask: %f Bid: %f Last: %f" % (wAverage,float(low),float(high),float(currentPairPrice))
     buyDiff = abs(lastBuyPrice - float(currentPairPrice))
     sellDiff = abs(lastSellPrice - float(currentPairPrice))
-    if (len(averages) > 2 and lastBuyPrice < wAverage and lastBuyPrice < float(currentPairPrice) and buyDiff >= diff and lastOrder != 1 and float(currentPairPrice) > float(hrLow) + padding):
+    if (len(averages) > 2 and lastBuyPrice < wAverage and lastBuyPrice < float(currentPairPrice) and buyDiff >= diff and lastOrder != 1 and float(currentPairPrice) > float(hrLow) + padding and abs(lastTradeTime - endTime) > 240):
         try:
             price = float(currentPairPrice) + 1.0 #this is a workaround until i can figure out how to use postOnly option
             orderData = conn.sell(pair,price,money)
@@ -104,7 +104,7 @@ while True:
             tradeMem.append(lastTradeVal)
             lastOrder = 1
             lastTradeTime = int(time.time())
-    if (len(averages) > 2 and lastSellPrice > wAverage and lastSellPrice > float(currentPairPrice) and sellDiff >= diff and lastOrder != 0 and float(currentPairPrice) < float(hrHigh) - padding):
+    if (len(averages) > 2 and lastSellPrice > wAverage and lastSellPrice > float(currentPairPrice) and sellDiff >= diff and lastOrder != 0 and float(currentPairPrice) < float(hrHigh) - padding and abs(lastTradeTime - endTime) > 240):
         try:
             price = float(currentPairPrice) - 1.0
             orderData = conn.buy(pair,price,money)
