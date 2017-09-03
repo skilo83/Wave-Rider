@@ -1,4 +1,4 @@
-# WAVE RIDER V1.7
+# WAVE RIDER V1.7.1
 # An experimental trading bot designed for times of high volatility
 
 
@@ -33,7 +33,7 @@ try:
     file.close()
     APIKEY = APIKEY.strip()
     APISECRET = APISECRET.strip()
-    if (APIKEY is "" or APISECRET is ""):
+    if (len(APIKEY) < 1 or len(APISECRET) < 1):
         print 'No API key was found.'
         sys.exit(1)
 except Exception as e:
@@ -96,7 +96,7 @@ while True:
                 sys.exit(1)
         if (tradeErr is False):
             profLoss = abs(tradeMem[0] - tradeMem[1])
-            if (tradeMem[0] == 0.0):
+            if (tradeMem[0] == 0.0 or tradeMem[1] == 0.0):
                 profLoss = 0.0
             print '-----SELL ORDER-----'
             #if statement for profit/loss not needed here because this function only executes if profit can be made
@@ -164,7 +164,7 @@ while True:
                 sys.exit(1)
         if (tradeErr is False):
             profLoss = abs(tradeMem[0] - tradeMem[1])
-            if (tradeMem[0] == 0.0):
+            if (tradeMem[0] == 0.0 or tradeMem[1] == 0.0):
                 profLoss = 0.0
             print '-----SELL ORDER-----'
             if (lastBuyPrice > price):
