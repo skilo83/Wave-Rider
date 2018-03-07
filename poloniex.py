@@ -1,5 +1,4 @@
-import urllib
-import urllib2
+from urllib.request import urlopen
 import json
 import time
 import hmac,hashlib
@@ -28,16 +27,16 @@ class poloniex:
     def api_query(self, command, req={}):
 
         if(command == "returnTicker" or command == "return24Volume"):
-            ret = urllib2.urlopen(urllib2.Request('https://poloniex.com/public?command=' + command))
+            ret = urlopen('https://poloniex.com/public?command=' + command)
             return json.loads(ret.read())
         elif(command == "returnOrderBook"):
-            ret = urllib2.urlopen(urllib2.Request('https://poloniex.com/public?command=' + command + '&currencyPair=' + str(req['currencyPair'])))
+            ret = urlopen('https://poloniex.com/public?command=' + command + '&currencyPair=' + str(req['currencyPair']))
             return json.loads(ret.read())
         elif(command == "returnMarketTradeHistory"):
-            ret = urllib2.urlopen(urllib2.Request('https://poloniex.com/public?command=' + "returnTradeHistory" + '&currencyPair=' + str(req['currencyPair'])))
+            ret = urlopen('https://poloniex.com/public?command=' + "returnTradeHistory" + '&currencyPair=' + str(req['currencyPair']))
             return json.loads(ret.read())
         elif(command == "returnChartData"):
-            ret = urllib2.urlopen(urllib2.Request('https://poloniex.com/public?command=returnChartData&currencyPair=' + str(req['currencyPair']) + '&start=' + str(req['start']) + '&end=' + str(req['end']) + '&period=' + str(req['period'])))
+            ret = urlopen('https://poloniex.com/public?command=returnChartData&currencyPair=' + str(req['currencyPair']) + '&start=' + str(req['start']) + '&end=' + str(req['end']) + '&period=' + str(req['period']))
             return json.loads(ret.read())
         else:
             req['command'] = command
@@ -50,7 +49,7 @@ class poloniex:
                 'Key': self.APIKey
             }
 
-            ret = urllib2.urlopen(urllib2.Request('https://poloniex.com/tradingApi', post_data, headers))
+            ret = urlopen('https://poloniex.com/tradingApi', post_data, headers)
             jsonRet = json.loads(ret.read())
             return self.post_process(jsonRet)
 

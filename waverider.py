@@ -34,16 +34,15 @@ try:
     APIKEY = APIKEY.strip()
     APISECRET = APISECRET.strip()
     if (len(APIKEY) < 1 or len(APISECRET) < 1):
-        print 'No API key was found.'
+        print ('No API key was found.')
         sys.exit(1)
 except Exception as e:
-    print e
-    sys.exit(1)
+    sys.exit(str(e))
 
 #These basically just buy or sell if 1 hour has elapsed since the last trade. Yes i know it's hacky.
 #The whole idea here is to keep the bot trading at all times.
-buyProtection = True
-sellProtection = True
+buyProtection = False
+sellProtection = False
 
 # DO NOT TOUCH ANYTHING BELOW THIS LINE!
 conn = poloniex(APIKEY, APISECRET)
@@ -70,7 +69,7 @@ while True:
     except Exception as e:
         httpErr = True
         errcnt = errcnt + 1
-        print e
+        print (str(e))
     currentPairPrice = currentValues[pair]["last"]
     hrHigh = currentValues[pair]["high24hr"]
     hrLow = currentValues[pair]["low24hr"]
@@ -79,7 +78,7 @@ while True:
     if (wAverage == 0.0):
         wAverage = float(currentPairPrice)
     if (httpErr is False):
-        print "{:%Y-%m-%d %H:%M:%S}".format(datetime.datetime.now()) + " Average: %f Ask: %f Bid: %f Last: %f" % (wAverage,float(low),float(high),float(currentPairPrice))
+        print ("{:%Y-%m-%d %H:%M:%S}".format(datetime.datetime.now()) + " Average: %f Ask: %f Bid: %f Last: %f" % (wAverage,float(low),float(high),float(currentPairPrice)))
     buyDiff = abs(lastBuyPrice - float(currentPairPrice))
     sellDiff = abs(lastSellPrice - float(currentPairPrice))
     if (len(averages) > 2 and lastBuyPrice < wAverage and lastBuyPrice < float(currentPairPrice) and buyDiff >= diff and lastOrder != 1 and float(currentPairPrice) > float(hrLow) + padding and abs(lastTradeTime - endTime) > 240):
@@ -88,19 +87,18 @@ while True:
             orderData = conn.sell(pair,price,money)
         except Exception as e:
             if (e is 'error' or "'error'"):
-                print e
-                print "Trade aborted"
+                print (str(e))
+                print ("Trade aborted")
                 tradeErr = True
             else:
-                print e
-                sys.exit(1)
+                sys.exit(str(e))
         if (tradeErr is False):
             profLoss = abs(tradeMem[0] - tradeMem[1])
             if (tradeMem[0] == 0.0 or tradeMem[1] == 0.0):
                 profLoss = 0.0
-            print '-----SELL ORDER-----'
+            print ('-----SELL ORDER-----')
             #if statement for profit/loss not needed here because this function only executes if profit can be made
-            print 'Sold %f at %f making a total profit of %f' % (money,price,profLoss)
+            print ('Sold %f at %f making a total profit of %f' % (money,price,profLoss))
             lastSellPrice = price
             lastTradeVal = money * price
             tradeMem.append(lastTradeVal)
@@ -112,15 +110,14 @@ while True:
             orderData = conn.buy(pair,price,money)
         except Exception as e:
             if (e is 'error' or "'error'"):
-                print e
-                print "Trade aborted"
+                print (str(e))
+                print ("Trade aborted")
                 tradeErr = True
             else:
-                print e
-                sys.exit(1)
+                sys.exit(str(e))
         if (tradeErr is False):
-            print '-----BUY ORDER-----'
-            print 'Bought %f at %f' % (money,price)
+            print ('-----BUY ORDER-----')
+            print ('Bought %f at %f' % (money,price))
             lastBuyPrice = price
             lastTradeVal = money * price
             tradeMem.append(lastTradeVal)
@@ -128,21 +125,20 @@ while True:
             lastTradeTime = int(time.time())
     if (len(averages) > 2 and abs(lastTradeTime - endTime) > 3600 and lastOrder != 0 and float(currentPairPrice) < float(hrHigh) and lastSellPrice > float(currentPairPrice) and buyProtection is True):
         try:
-            print 'It has been more than 1 hour since the last trade.'
-            print 'Placing a buy order to secure a new position'
+            print ('It has been more than 1 hour since the last trade.')
+            print ('Placing a buy order to secure a new position')
             price = float(currentPairPrice) - 1.0
             orderData = conn.buy(pair,price,money)
         except Exception as e:
             if (e is 'error' or "'error'"):
-                print e
-                print "Trade aborted"
+                print (str(e))
+                print ("Trade aborted")
                 tradeErr = True
             else:
-                print e
-                sys.exit(1)
+                sys.exit(str(e))
         if (tradeErr is False):
-            print '-----BUY ORDER-----'
-            print 'Bought %f at %f' % (money,price)
+            print ('-----BUY ORDER-----')
+            print ('Bought %f at %f' % (money,price))
             lastBuyPrice = price
             lastTradeVal = money * price
             tradeMem.append(lastTradeVal)
@@ -150,27 +146,26 @@ while True:
             lastTradeTime = int(time.time())
     if (len(averages) > 2 and abs(lastTradeTime - endTime) > 3600 and lastOrder != 1 and float(currentPairPrice) > float(hrLow) and lastBuyPrice < float(currentPairPrice) and sellProtection is True):
         try:
-            print 'It has been more than 1 hour since the last trade.'
-            print 'Placing sell order to secure a new position'
+            print ('It has been more than 1 hour since the last trade.')
+            print ('Placing sell order to secure a new position')
             price = float(currentPairPrice) + 1.0
             orderData = conn.sell(pair,price,money)
         except Exception as e:
             if (e is 'error' or "'error'"):
-                print e
-                print "Trade aborted"
+                print (str(e))
+                print ("Trade aborted")
                 tradeErr = True
             else:
-                print e
-                sys.exit(1)
+                sys.exit(str(e))
         if (tradeErr is False):
             profLoss = abs(tradeMem[0] - tradeMem[1])
             if (tradeMem[0] == 0.0 or tradeMem[1] == 0.0):
                 profLoss = 0.0
-            print '-----SELL ORDER-----'
+            print ('-----SELL ORDER-----')
             if (lastBuyPrice > price):
-                print 'Sold %f at %f taking a total loss of %f' % (money,price,profLoss)
+                print ('Sold %f at %f taking a total loss of %f' % (money,price,profLoss))
             else:
-                print 'Sold %f at %f making a total profit of %f' % (money,price,profLoss)
+                print ('Sold %f at %f making a total profit of %f' % (money,price,profLoss))
             lastSellPrice = price
             lastTradeVal = money * price
             tradeMem.append(lastTradeVal)
@@ -185,7 +180,7 @@ while True:
     if (errcnt > 0):
         averages = []
         errcnt = 0
-        print "Weighted average reset due to http errors."
+        print ("Weighted average reset due to http errors.")
     if (len(averages) > 0):
         wAverage = sum(averages) / len(averages)
     time.sleep(int(period))

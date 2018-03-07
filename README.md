@@ -1,10 +1,10 @@
 # Wave Rider
-A crypto currency trading bot for poloniex designed for times of high volatility.
+A user configurable crypto currency trading bot for poloniex.
 
 ## Use at your own risk!
 I am not responsible for any losses you may incur from the use of this script.
 
-Requires python 2.x
+Requires python 3.x
 
 Setup:
 
@@ -12,11 +12,11 @@ Setup:
 
 Usage:
 
-    python2 waverider.py <lastsellprice> <lastbuyprice> <money> <diff> <padding> <pair>
+    python3 waverider.py <lastsellprice> <lastbuyprice> <money> <diff> <padding> <pair>
     
 Help:
 
-    python2 waverider.py -h
+    python3 waverider.py -h
     
 "What in tarnation does all this mean?"
 
