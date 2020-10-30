@@ -43,9 +43,3 @@ padding:
 pair:
 
     the pair you are trading. USDT_BTC BTC_XMR etc etc.
-
-Donations are appreciated.
-
-Bitcoin: 3HksiJK4HWFNmh3ZKb4HuxSUBApHAFPvMe
-
-Bitcoin Cash: 35YJ2UMNzYykMECHMYQ3ss4KNdfBfYcjKi
